@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MyRun</string>
+    <string name="profile_photo_file_name">profile_image</string>
 </resources>
