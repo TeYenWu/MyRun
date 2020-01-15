@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:title="@string/settings_account">
+        <PreferenceScreen
+            android:title="@string/settings_user_profile"
+            android:summary="@string/settings_user_profile_description">
+            <intent android:action="com.teyenwu.myrun.activities.UserProfileActivity"/>
+        </PreferenceScreen>
+        <CheckBoxPreference
+            android:key="checkbox_privacy"
+            android:title="@string/settings_privacy"
+            android:summary="@string/settings_privacy_description" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/settings_additional">
+
+        <ListPreference
+            android:key="list_preference"
+            android:title="@string/settings_unit_preference"
+            android:summary="@string/settings_unit_preference_description"
+            android:entries="@array/settings_unit_array"
+            android:entryValues="@array/settings_unit_valeu_array"
+            android:dialogTitle="@string/settings_unit_preference" />
+        <EditTextPreference
+            android:key="screen_comment"
+            android:title="@string/settings_comment"
+            android:summary="@string/settings_comment_description"
+            android:dialogTitle="@string/settings_comment" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/settings_misc">
+
+        <!-- This PreferenceScreen tag serves as a screen break (similar to page break
+             in word processing). Like for other preference types, we assign a key
+             here so it is able to save and restore its instance state. -->
+        <PreferenceScreen
+            android:title="@string/settings_webpage"
+            android:summary="@string/settings_webpage_description">
+
+            <intent android:action="android.intent.action.VIEW"
+                android:data="@string/settings_webpage_description" />>
+
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

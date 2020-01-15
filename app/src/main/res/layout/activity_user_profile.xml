@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".UserProfileActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -19,7 +19,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:focusableInTouchMode="true">
 
             <TextView
                 android:id="@+id/textView"
@@ -40,8 +41,8 @@
                     android:layout_marginStart="100dp"
                     android:layout_marginLeft="100dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/d_pine_spacing" />
+                    app:srcCompat="@drawable/d_pine_spacing"
+                    tools:layout_editor_absoluteY="0dp" />
 
                 <Button
                     android:id="@+id/profileChangeButton"
