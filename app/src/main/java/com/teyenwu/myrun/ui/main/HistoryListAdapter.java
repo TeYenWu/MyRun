@@ -20,6 +20,7 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
     Context context;
     ArrayList<ExerciseEntry> exerciseEntries = new ArrayList<>();
     String[] activityTypeStringArray;
+    String[] inputTypeStringArray;
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -63,6 +64,7 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
                 .inflate(R.layout.list_history_item, parent, false);
         context = parent.getContext();
         activityTypeStringArray = parent.getContext().getResources().getStringArray(R.array.activity_type_array);
+        inputTypeStringArray = parent.getContext().getResources().getStringArray(R.array.input_type_array);
         HistoryViewHolder vh = new HistoryViewHolder(v);
         return vh;
     }
@@ -73,7 +75,7 @@ public class HistoryListAdapter extends RecyclerView.Adapter<HistoryListAdapter.
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         ExerciseEntry entry = exerciseEntries.get(position);
-        String title = activityTypeStringArray[entry.getActivityType()] + ", " + entry.getDateTimeString();
+        String title = inputTypeStringArray[entry.getInputType()] + ": " + activityTypeStringArray[entry.getActivityType()] + ", " + entry.getDateTimeString();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         String unitPreference = sp.getString("unit_preference","Miles");
 

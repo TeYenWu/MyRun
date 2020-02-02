@@ -97,6 +97,7 @@ public class StartRunFragment extends Fragment {
 
     public void onStartActivity(){
         ExerciseEntry entry = new ExerciseEntry();
+        entry.setInputType(this.inputTypeSpinner.getSelectedItemPosition());
         entry.setActivityType(this.activityTypeSpinner.getSelectedItemPosition());
         if(this.inputTypeSpinner.getSelectedItemPosition() == INPUT_TYPE_MANUAL_ENTRY_INDEX){
             mListener.onStartActivityManually(entry);
