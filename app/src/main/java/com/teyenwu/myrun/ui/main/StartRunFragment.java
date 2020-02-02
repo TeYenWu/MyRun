@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.teyenwu.myrun.R;
+import com.teyenwu.myrun.model.ExerciseEntry;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -95,12 +96,14 @@ public class StartRunFragment extends Fragment {
     }
 
     public void onStartActivity(){
+        ExerciseEntry entry = new ExerciseEntry();
+        entry.setActivityType(this.activityTypeSpinner.getSelectedItemPosition());
         if(this.inputTypeSpinner.getSelectedItemPosition() == INPUT_TYPE_MANUAL_ENTRY_INDEX){
-            mListener.onStartActivityManually();
+            mListener.onStartActivityManually(entry);
         } else if(this.inputTypeSpinner.getSelectedItemPosition() == INPUT_TYPE_GPS_INDEX){
-            mListener.onStartActivityGPS();
+            mListener.onStartActivityGPS(entry);
         } else if(this.inputTypeSpinner.getSelectedItemPosition() == INPUT_TYPE_AUTOMATIC_INDEX){
-            mListener.onStartActivityAutomatically();
+            mListener.onStartActivityAutomatically(entry);
         }
     }
 
@@ -120,8 +123,8 @@ public class StartRunFragment extends Fragment {
      */
     public interface OnStartRunFragmentListener {
         // TODO: Update argument type and name
-        void onStartActivityManually();
-        void onStartActivityGPS();
-        void onStartActivityAutomatically();
+        void onStartActivityManually(ExerciseEntry entry);
+        void onStartActivityGPS(ExerciseEntry entry);
+        void onStartActivityAutomatically(ExerciseEntry entry);
     }
 }

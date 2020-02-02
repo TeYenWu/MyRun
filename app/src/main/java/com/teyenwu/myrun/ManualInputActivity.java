@@ -2,11 +2,13 @@ package com.teyenwu.myrun;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -15,17 +17,30 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 
-public class ManualInputActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener, DialogInterface.OnClickListener {
+public class ManualInputActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+
+    final static int editTextId = ViewCompat.generateViewId();
+
+    Calendar date = Calendar.getInstance();;
+    int duration = 0;
+    float distance= 0;
+    int calories= 0;
+    int heartrate= 0;
+    String comment="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        date.setTime(new Date());
         setContentView(R.layout.activity_manual_input);
         ListView listView = findViewById(R.id.manualInfoListView);
         listView.setAdapter(ArrayAdapter.createFromResource(this,
@@ -79,10 +94,34 @@ public class ManualInputActivity extends AppCompatActivity implements DatePicker
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
         final EditText input = new EditText(this);
+        input.setId(editTextId);
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         builder.setView(input);
-        builder.setPositiveButton("OK", ManualInputActivity.this);
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        final String titleString = title;
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (titleString){
+                    case "Duration":
+                        duration = Integer.parseInt(input.getText().toString());
+                        break;
+                    case "Distance":
+                        distance = Float.parseFloat(input.getText().toString());
+                        break;
+                    case "Calories":
+                        calories = Integer.parseInt(input.getText().toString());
+                        break;
+                    case "Heart rate":
+                        heartrate = Integer.parseInt(input.getText().toString());
+                        break;
+                    case "Comment":
+                        comment = input.getText().toString();
+                        break;
+
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -96,35 +135,57 @@ public class ManualInputActivity extends AppCompatActivity implements DatePicker
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
         final EditText input = new EditText(this);
+        input.setId(editTextId);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setHint(R.string.comment_dialog_hint);
         builder.setView(input);
-        builder.setPositiveButton("OK", ManualInputActivity.this);
-        builder.setNegativeButton("Cancel", ManualInputActivity.this);
+        final String titleString = title;
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (titleString){
+                    case "Comment":
+                        comment = input.getText().toString();
+                        break;
+
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
 
         builder.show();
     }
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
+        date.set(year, month, dayOfMonth);
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
+        date.set(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
     }
 
-    @Override
-    public void onClick(DialogInterface dialog, int which) {
-        if(which == BUTTON_POSITIVE){
-
-        } else{
-            dialog.cancel();
-        }
-    }
 
     public void onSaveInfo(View view){
+
+        Intent data = new Intent();
+        data.putExtra("Duration",duration);
+        data.putExtra("Distance",distance);
+        data.putExtra("Calories",calories);
+        data.putExtra("Heartrate",heartrate);
+        data.putExtra("Comment",comment);
+
+        SimpleDateFormat sdf = null;
+        sdf = new SimpleDateFormat("HH:mm:ss MM-dd-yyyy");
+
+        data.putExtra("Date", sdf.format(date.getTime()));
+        setResult(RESULT_OK, data);
         finish();
     }
 

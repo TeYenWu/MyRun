@@ -1,5 +1,9 @@
 package com.teyenwu.myrun.ui.main;
 
+import com.teyenwu.myrun.model.ExerciseEntry;
+
+import java.util.ArrayList;
+
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -8,15 +12,25 @@ import androidx.lifecycle.ViewModel;
 
 public class ActivityViewModel extends ViewModel {
 
-    private MutableLiveData<Integer> mIndex = new MutableLiveData<>();
-    private LiveData<String> mText = Transformations.map(mIndex, new Function<Integer, String>() {
-        @Override
-        public String apply(Integer input) {
-            return "Hello world from section: " + input;
-        }
-    });
+    private MutableLiveData<ArrayList<ExerciseEntry>> exerciseEntryMutableLiveData = new MutableLiveData<>();
 
-    public LiveData<String> getText() {
-        return mText;
+    public LiveData<ArrayList<ExerciseEntry>> getExerciseEntries() {
+        return exerciseEntryMutableLiveData;
     }
+
+    public void setExerciseEntries(ArrayList entries){
+        exerciseEntryMutableLiveData.setValue(entries);
+    }
+
+    private final MutableLiveData<ExerciseEntry> selected = new MutableLiveData<ExerciseEntry>();
+
+    public void select(ExerciseEntry item) {
+        selected.setValue(item);
+    }
+
+    public LiveData<ExerciseEntry> getSelected() {
+        return selected;
+    }
+
+
 }

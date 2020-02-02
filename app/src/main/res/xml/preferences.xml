@@ -19,7 +19,7 @@
         android:title="@string/settings_additional">
 
         <ListPreference
-            android:key="list_preference"
+            android:key="unit_preference"
             android:title="@string/settings_unit_preference"
             android:summary="@string/settings_unit_preference_description"
             android:entries="@array/settings_unit_array"
