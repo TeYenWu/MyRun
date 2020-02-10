@@ -20,6 +20,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.teyenwu.myrun.model.ExerciseEntry;
+import com.teyenwu.myrun.model.ExerciseEntryDbHelper;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,12 +39,17 @@ public class ManualInputActivity extends AppCompatActivity implements DatePicker
     int calories= 0;
     int heartrate= 0;
     String comment="";
+    int activityType = 0;
+
+    ExerciseEntryDbHelper dpHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         date.setTime(new Date());
         setContentView(R.layout.activity_manual_input);
+
+        activityType = getIntent().getIntExtra("activityType", 0);
         ListView listView = findViewById(R.id.manualInfoListView);
         listView.setAdapter(ArrayAdapter.createFromResource(this,
                 R.array.manual_info_array,
@@ -173,18 +181,23 @@ public class ManualInputActivity extends AppCompatActivity implements DatePicker
 
 
     public void onSaveInfo(View view){
-
-        Intent data = new Intent();
-        data.putExtra("Duration",duration);
-        data.putExtra("Distance",distance);
-        data.putExtra("Calories",calories);
-        data.putExtra("Heartrate",heartrate);
-        data.putExtra("Comment",comment);
-
+        dpHelper = new ExerciseEntryDbHelper(this);
         SimpleDateFormat sdf = null;
         sdf = new SimpleDateFormat("HH:mm:ss MM-dd-yyyy");
+        ExerciseEntry entry = new ExerciseEntry();
+        entry.setInputType(ExerciseEntry.InputType.TYPE_MANUAL_INPUT.ordinal());
+        entry.setDateTimeFromString(sdf.format(date.getTime()));
+        entry.setDistance(distance);
+        entry.setDuration(duration);
+        entry.setCalorie(calories);
+        entry.setHeartRate(heartrate);
+        entry.setComment(comment);
+        long id = dpHelper.insertEntry(entry);
+        entry.setId(id);
 
-        data.putExtra("Date", sdf.format(date.getTime()));
+        Intent data = new Intent();
+        data.putExtra("id",id);
+
         setResult(RESULT_OK, data);
         finish();
     }

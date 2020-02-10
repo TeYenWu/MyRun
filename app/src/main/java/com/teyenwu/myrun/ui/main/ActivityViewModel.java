@@ -22,6 +22,12 @@ public class ActivityViewModel extends ViewModel {
         exerciseEntryMutableLiveData.setValue(entries);
     }
 
+    public void insertExerciseEntry(ExerciseEntry entry){
+        ArrayList<ExerciseEntry> list = exerciseEntryMutableLiveData.getValue();
+        list.add(entry);
+        exerciseEntryMutableLiveData.setValue(list);
+    }
+
     private final MutableLiveData<ExerciseEntry> selected = new MutableLiveData<ExerciseEntry>();
 
     public void select(ExerciseEntry item) {

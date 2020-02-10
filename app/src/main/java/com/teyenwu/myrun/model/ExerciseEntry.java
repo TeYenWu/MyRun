@@ -2,15 +2,30 @@ package com.teyenwu.myrun.model;
 
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.reflect.TypeToken;
 import com.teyenwu.myrun.R;
 
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import com.google.gson.Gson;
 
 public class ExerciseEntry {
+    public enum InputType{
+        TYPE_MANUAL_INPUT, TYPE_GPS, TYPE_AUTO
+    }
     private Long id;
     private int mInputType;  // Manual, GPS or automatic
     private int mActivityType;     // Running, cycling etc.
@@ -23,7 +38,7 @@ public class ExerciseEntry {
     private float mClimb;         // Climb. Either in meters or feet.
     private int mHeartRate;       // Heart rate
     private String mComment;       // Comments
-    private ArrayList<LatLng> mLocationList; // Location list
+    private List<LatLng> mLocationList; // Location list
 
     public ExerciseEntry(){
 
@@ -143,12 +158,33 @@ public class ExerciseEntry {
         this.mComment = mComment;
     }
 
-    public ArrayList<LatLng> getLocationList() {
+    public List<LatLng> getLocationList() {
         return mLocationList;
     }
 
-    public void setLocationList(ArrayList<LatLng> mLocationList) {
+    public void setLocationList(List<LatLng> mLocationList) {
         this.mLocationList = mLocationList;
     }
+
+    public String getLocationListAsString(){
+        Gson gsonInstance = new GsonBuilder().registerTypeAdapter(LatLng.class, new LatLngSerializer()).create();
+
+        return gsonInstance.toJson(this.mLocationList);
+    }
+
+    public void setLocationListFromString(String string){
+        Type listOfTestObject = new TypeToken<List<LatLng>>(){}.getType();
+        Gson gsonInstance = new GsonBuilder().registerTypeAdapter(LatLng.class, new LatLngSerializer()).create();
+        gsonInstance.toJson(this.mLocationList);
+        try {
+            this.mLocationList =  gsonInstance.fromJson(string, listOfTestObject);
+        }catch (Exception e){
+            this.mLocationList = new ArrayList<LatLng>();
+        }
+
+
+    }
+
+
 
 }

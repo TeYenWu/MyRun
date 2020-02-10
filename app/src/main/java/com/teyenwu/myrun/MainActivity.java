@@ -54,48 +54,52 @@ public class MainActivity extends AppCompatActivity implements StartRunFragment.
 
 
     public void onStartDetailActivity(ExerciseEntry entry) {
-        Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra("id", entry.getId());
-        startActivityForResult(intent, REQUEST_FOR_DETAIL_ACTIVITY);
+        if(entry.getInputType() == ExerciseEntry.InputType.TYPE_GPS.ordinal()){
+            Intent intent = new Intent(this, MapsActivity.class);
+            intent.putExtra("id", entry.getId());
+            startActivityForResult(intent, REQUEST_FOR_MAP_ACTIVITY);
+        } else{
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtra("id", entry.getId());
+            startActivityForResult(intent, REQUEST_FOR_DETAIL_ACTIVITY);
+        }
+
     }
 
     @Override
     public void onStartActivityManually(ExerciseEntry entry) {
-        entryOnStart = entry;
         Intent intent = new Intent(this, ManualInputActivity.class);
+        intent.putExtra("activityType", entry.getActivityType());
         startActivityForResult(intent, REQUEST_FOR_MANUAL_ACTIVITY);
     }
 
     @Override
     public void onStartActivityGPS(ExerciseEntry entry) {
-        entryOnStart = entry;
         Intent intent = new Intent(this, MapsActivity.class);
+        intent.putExtra("inputType", entry.getInputType());
+        intent.putExtra("activityType", entry.getActivityType());
         startActivityForResult(intent, REQUEST_FOR_MAP_ACTIVITY);
     }
 
     @Override
     public void onStartActivityAutomatically(ExerciseEntry entry) {
-        entryOnStart = entry;
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.putExtra("activityType", entry.getActivityType());
+        startActivityForResult(intent, REQUEST_FOR_MAP_ACTIVITY);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_FOR_MANUAL_ACTIVITY && resultCode == RESULT_OK) {
+            long id = data.getLongExtra("id", -1);
 
-            entryOnStart.setDateTimeFromString(data.getStringExtra("Date"));
-            entryOnStart.setDistance(data.getFloatExtra("Distance", 0));
-            entryOnStart.setDuration(data.getIntExtra("Duration", 0));
-            entryOnStart.setCalorie(data.getIntExtra("Calories", 0));
-            entryOnStart.setHeartRate(data.getIntExtra("Heartrate", 0));
-            entryOnStart.setComment(data.getStringExtra("Comment"));
-            long id = dpHelper.insertEntry(entryOnStart);
-            entryOnStart.setId(id);
 
         } else if (requestCode == REQUEST_FOR_MAP_ACTIVITY && resultCode == RESULT_OK) {
+            long id = data.getLongExtra("id", -1);
 
         } else if (requestCode == REQUEST_FOR_DETAIL_ACTIVITY && resultCode == RESULT_OK) {
-
+            long id = data.getLongExtra("id", -1);
         }
 
         viewModel.setExerciseEntries(dpHelper.fetchEntries());

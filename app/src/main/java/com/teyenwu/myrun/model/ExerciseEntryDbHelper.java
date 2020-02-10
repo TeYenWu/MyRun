@@ -71,6 +71,7 @@ public class ExerciseEntryDbHelper extends SQLiteOpenHelper {
 
     // Insert a item given each column value
     public long insertEntry(ExerciseEntry entry) {
+
         ContentValues values = new ContentValues();//a row of data, here we have only one string item
         values.put(COLUMN_INPUTTYPE, entry.getInputType());
         values.put(COLUMN_ACTIVITYTYPE, entry.getActivityType());
@@ -84,7 +85,7 @@ public class ExerciseEntryDbHelper extends SQLiteOpenHelper {
         values.put(COLUMN_HEARTRATE, entry.getHeartRate());
         values.put(COLUMN_COMMENT, entry.getComment());
 //        values.put(COLUMN_PRIVACY, entry.get());
-//        values.put(COLUMN_GPSDATA, entry.getLocationList());
+        values.put(COLUMN_GPSDATA, entry.getLocationListAsString().getBytes());
         SQLiteDatabase database = getWritableDatabase();
         long insertId = database.insert(ExerciseEntryDbHelper.TABLE_COMMENTS, null,	values);
 
@@ -144,6 +145,8 @@ public class ExerciseEntryDbHelper extends SQLiteOpenHelper {
         entry.setClimb(cursor.getFloat(9));
         entry.setHeartRate(cursor.getInt(10));
         entry.setComment(cursor.getString(11));
+        if (cursor.getBlob(12) != null)
+            entry.setLocationListFromString(new String(cursor.getBlob(12)));
 //        entry.setId(cursor.getLong(9));
 
 

@@ -3,6 +3,7 @@ package com.teyenwu.myrun;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -30,26 +31,28 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         if(entry != null){
-            EditText view = findViewById(R.id.activityTypeEditText);
-            String[] activityTypeStringArray = getResources().getStringArray(R.array.activity_type_array);
-            view.setText(activityTypeStringArray[entry.getActivityType()]);
+            if(entry.getInputType() == ExerciseEntry.InputType.TYPE_MANUAL_INPUT.ordinal()){
+                EditText view = findViewById(R.id.activityTypeEditText);
+                String[] activityTypeStringArray = getResources().getStringArray(R.array.activity_type_array);
+                view.setText(activityTypeStringArray[entry.getActivityType()]);
 
-            EditText view2 = findViewById(R.id.dateEditText);
-            view2.setText(entry.getDateTimeString());
+                EditText view2 = findViewById(R.id.dateEditText);
+                view2.setText(entry.getDateTimeString());
 
-            EditText view3 = findViewById(R.id.durationEditText);
-            view3.setText(entry.getDuration() + "mins " + "0secs");
+                EditText view3 = findViewById(R.id.durationEditText);
+                view3.setText(entry.getDuration() + "mins " + "0secs");
 
-            EditText view4 = findViewById(R.id.distanceEditText);
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-            String unitPreference = sp.getString("unit_preference","Miles");
-            float distance = 0;
-            if(unitPreference.equals("Miles"))
-                distance = entry.getDistance();
-            else
-                distance = entry.getDistance() * 1.61f;
+                EditText view4 = findViewById(R.id.distanceEditText);
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+                String unitPreference = sp.getString("unit_preference","Miles");
+                float distance = 0;
+                if(unitPreference.equals("Miles"))
+                    distance = entry.getDistance();
+                else
+                    distance = entry.getDistance() * 1.61f;
 
-            view4.setText(distance + " " + unitPreference);
+                view4.setText(distance + " " + unitPreference);
+            }
 
         }
     }
@@ -66,6 +69,10 @@ public class DetailActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.deleteMenuItem:
                 dpHelper.removeEntry(entry.getId());
+                Intent data = new Intent();
+                data.putExtra("id", entry.getId());
+
+                setResult(RESULT_OK, data);
                 finish();
                 break;
             default:
